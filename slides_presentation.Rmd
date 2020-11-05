@@ -1,0 +1,73 @@
+---
+title: "Mexican Population per state"
+author: "Lakshay Kalbhor"
+date: "November  6, 2020"
+output: ioslides_presentation
+---
+## Presentation 
+Through this code we try to plot the mexican population in USA per state. We write a server and ui file in r.
+The code can be found at [https://github.com/kalbhor/r_server](https://github.com/kalbhor/r_server)
+
+
+## Server
+
+This is the code for the server file. It fills the population variable from the data file (csv)
+```
+
+library(shiny)
+
+# Load Data
+
+population <- read.csv("./mexican_population.csv")
+
+# This is our shiny server
+function(input, output) { 
+  
+  output$number_of_people <- renderPlot({ 
+    
+    # Plotting a barplot 
+    barplot(population[,input$State],  
+            main=input$State, 
+            ylab="Count of Mexicans", 
+            xlab="Year") 
+  })
+}
+
+```
+
+## UI
+This is the code for the UI which accepts data from the server while passing it inputs from a select input.
+
+```
+library(shiny)
+
+
+# Loading the data about mexican population state wise in USA
+
+population <- read.csv("./mexican_population.csv")
+
+
+fluidPage(     
+  
+  # Give the page a title 
+  titlePanel("Mexican population per state"), 
+  
+  sidebarLayout(       
+    
+    
+    # A sidebar for input 
+    sidebarPanel(selectInput("State", "State:",  
+                             choices=colnames(population)), 
+                 hr(), 
+    ), 
+    
+    mainPanel( 
+      plotOutput("number_of_people")   
+    ) 
+    
+  ) 
+) 
+```
+
+## Conclusion
+We can use the [shiny app](https://lakshaykalbhor.shinyapps.io/project/) to view this in action!
